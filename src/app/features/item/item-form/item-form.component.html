@@ -1,0 +1,84 @@
+<div class="form-container">
+  <h2>{{ isEditMode ? 'Edit Item' : 'Add New Item' }}</h2>
+  
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="item-form">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" type="text" formControlName="title">
+      @if (itemForm.get('title')?.invalid && itemForm.get('title')?.touched) {
+        <div class="error">Title is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description"></textarea>
+      @if (itemForm.get('description')?.invalid && itemForm.get('description')?.touched) {
+        <div class="error">Description is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category" formControlName="category">
+        <option value="">Select a category</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+        <option value="accessories">Accessories</option>
+        <option value="documents">Documents</option>
+        <option value="other">Other</option>
+      </select>
+      @if (itemForm.get('category')?.invalid && itemForm.get('category')?.touched) {
+        <div class="error">Category is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input id="location" type="text" formControlName="location">
+      @if (itemForm.get('location')?.invalid && itemForm.get('location')?.touched) {
+        <div class="error">Location is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" formControlName="status">
+        <option value="">Select status</option>
+        <option value="lost">Lost</option>
+        <option value="found">Found</option>
+      </select>
+      @if (itemForm.get('status')?.invalid && itemForm.get('status')?.touched) {
+        <div class="error">Status is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email">
+      @if (itemForm.get('email')?.invalid && itemForm.get('email')?.touched) {
+        <div class="error">Valid email is required</div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone (optional)</label>
+      <input id="phone" type="tel" formControlName="phone">
+    </div>
+
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input id="image" type="file" accept="image/*" (change)="onImageSelected($event)">
+      @if (imagePreview) {
+        <img [src]="imagePreview" alt="Preview" class="image-preview">
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit">
+        {{ isEditMode ? 'Update Item' : 'Add Item' }}
+      </button>
+      <button type="button" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>

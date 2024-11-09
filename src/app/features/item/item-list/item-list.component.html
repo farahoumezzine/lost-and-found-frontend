@@ -1,0 +1,24 @@
+<div class="items-container">
+    <h2>Lost & Found Items</h2>
+    <button (click)="navigateToCreate()">Add New Item</button>
+  
+    <div class="items-grid">
+      @for (item of items; track item._id) {
+        <div class="item-card">
+          <img *ngIf="item.image" [src]="item.image" [alt]="item.title">
+          <h3>{{item.title}}</h3>
+          <p>{{item.description}}</p>
+          <p><strong>Category:</strong> {{item.category}}</p>
+          <p><strong>Location:</strong> {{item.location}}</p>
+          <p><strong>Status:</strong> {{item.status}}</p>
+          <div class="card-actions">
+              <button (click)="editItem(item._id!)">Edit</button>
+              <button (click)="deleteItem(item._id!)">Delete</button>
+          </div>
+        </div>
+       
+      } @empty {
+        <div>nope</div>
+    }
+    </div>
+  </div>
