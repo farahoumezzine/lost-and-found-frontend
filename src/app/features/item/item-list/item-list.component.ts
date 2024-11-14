@@ -35,6 +35,7 @@ export class ItemListComponent implements OnInit {
   loadItems(): void {
     this.itemService.getItems().subscribe({
       next: (data) => {
+        console.log('Loaded items:', data); // For debugging
         this.items = data;
         this.filteredItems = data;
       },

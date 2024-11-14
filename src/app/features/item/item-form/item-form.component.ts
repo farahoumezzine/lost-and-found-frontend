@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    // Add any other modules you need for *ngFor, etc.
   ]
 })
 export class ItemFormComponent implements OnInit {
@@ -38,25 +37,11 @@ export class ItemFormComponent implements OnInit {
     private itemService: ItemService,
     private router: Router,
     private route: ActivatedRoute
-  ) {
-    this.createForm();
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.itemForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
-      category: ['', Validators.required],
-      location: ['', [Validators.required, Validators.minLength(3)]],
-      date: ['', Validators.required],
-      status: ['', Validators.required],
-      name: ['', [Validators.required, Validators.name]],
-
-      email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      image: [null]
-    });
-
+    this.createForm();
+    
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode = true;
@@ -66,19 +51,24 @@ export class ItemFormComponent implements OnInit {
 
   createForm(): void {
     this.itemForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       category: ['', Validators.required],
-      location: ['', Validators.required],
+      location: ['', [Validators.required, Validators.minLength(3)]],
       date: ['', Validators.required],
       status: ['', Validators.required],
-      email: ['', [
-        Validators.required, 
-        Validators.email,
-        Validators.pattern('^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')
-      ]],
-      phone: ['', [Validators.minLength(8), Validators.pattern(/^[0-9]+$/)]],  
-          image: [null]
+      contactInfo: this.fb.group({
+        name: ['', [Validators.required]],
+        email: ['', [
+          Validators.required,
+          Validators.email,
+          Validators.pattern('^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')
+        ]],
+        phone: ['', [
+          Validators.pattern('^[0-9]{8,}$')
+        ]]
+      }),
+      image: [null]
     });
   }
 
@@ -88,24 +78,22 @@ export class ItemFormComponent implements OnInit {
         console.log('Loaded item:', item);
         
         this.itemForm.patchValue({
-          title: item.title || '',
-          description: item.description || '',
-          category: item.category || '',
-          location: item.location || '',
-          status: item.status?.toLowerCase() || '',
+          title: item.title,
+          description: item.description,
+          category: item.category,
+          location: item.location,
+          status: item.status,
           date: item.date ? new Date(item.date).toISOString().split('T')[0] : '',
-          name: item.contactInfo?.name || '',
-          email: item.contactInfo?.email || '',
-          phone: item.contactInfo?.phone || '',
-          image: null
+          contactInfo: {
+            name: item.contactInfo?.name || '',
+            email: item.contactInfo?.email || '',
+            phone: item.contactInfo?.phone || ''
+          }
         });
 
         if (item.image) {
           this.imagePreview = 'http://localhost:3000' + item.image;
         }
-
-        this.itemForm.markAsPristine();
-        this.itemForm.markAsUntouched();
       },
       error: (error) => {
         console.error('Error loading item:', error);
@@ -139,68 +127,79 @@ export class ItemFormComponent implements OnInit {
     if (fileInput) fileInput.value = '';
   }
 
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.itemForm.get(fieldName);
+  isFieldInvalid(fieldPath: string): boolean {
+    const field = fieldPath.split('.').reduce((form: any, path) => {
+      return form?.get(path);
+    }, this.itemForm);
+    
     return field ? (field.invalid && (field.dirty || field.touched)) : false;
   }
 
   onSubmit(): void {
     if (this.itemForm.valid) {
       const formData = new FormData();
+      const formValues = this.itemForm.value;
       
-      // Create the item data object
-      const itemData = {
-        title: this.itemForm.get('title')?.value,
-        description: this.itemForm.get('description')?.value,
-        category: this.itemForm.get('category')?.value,
-        location: this.itemForm.get('location')?.value,
-        status: this.itemForm.get('status')?.value,
-        date: this.itemForm.get('date')?.value,
-        contactInfo: {
-          email: this.itemForm.get('email')?.value,
-          phone: this.itemForm.get('phone')?.value
-        }
+      // Append basic fields
+      formData.append('title', formValues.title);
+      formData.append('description', formValues.description);
+      formData.append('category', formValues.category);
+      formData.append('location', formValues.location);
+      formData.append('status', formValues.status);
+      formData.append('date', formValues.date);
+      
+      // Append contact info
+      const contactInfo = {
+        name: formValues.contactInfo.name,
+        email: formValues.contactInfo.email,
+        phone: formValues.contactInfo.phone || ''
       };
+      
+      // Log the contact info for debugging
+      console.log('Contact Info being sent:', contactInfo);
+      
+      formData.append('contactInfo', JSON.stringify(contactInfo));
 
-      // Append each field individually instead of using itemData object
-      Object.entries(itemData).forEach(([key, value]) => {
-        if (key === 'contactInfo') {
-          formData.append(key, JSON.stringify(value));
-        } else {
-          formData.append(key, value as string);
-        }
-      });
-
-      // Append the image file if it exists
+      // Append image if it exists
       const imageFile = this.itemForm.get('image')?.value;
       if (imageFile instanceof File) {
         formData.append('image', imageFile);
       }
 
       this.isSubmitting = true;
-      const id = this.route.snapshot.paramMap.get('id');
-      
+
       const request = this.isEditMode ? 
-        this.itemService.updateItem(id!, formData) :
+        this.itemService.updateItem(this.route.snapshot.paramMap.get('id')!, formData) :
         this.itemService.createItem(formData);
 
       request.subscribe({
         next: (response) => {
-          console.log('Update successful:', response);
+          console.log('Server response:', response); // Add this for debugging
           this.showSuccess = true;
-          this.isSubmitting = false;
           setTimeout(() => {
-            this.showSuccess = false;
             this.router.navigate(['/items']);
           }, 2000);
         },
         error: (error) => {
-          console.error('Form submission - Error:', error);
+          console.error('Error saving item:', error);
           this.isSubmitting = false;
-          alert('Error updating item. Please try again.');
+          alert('Error saving item. Please try again.');
         }
       });
+    } else {
+      this.markFormGroupTouched(this.itemForm);
     }
+  }
+
+  // Helper method to show validation errors
+  markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 
   onCancel(): void {

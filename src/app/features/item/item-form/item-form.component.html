@@ -19,158 +19,180 @@
   <h2>{{ isEditMode ? 'Edit Item' : 'Add New Item' }}</h2>
   
   <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="item-form">
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input 
-        id="title" 
-        type="text" 
-        formControlName="title"
-        [class.invalid]="isFieldInvalid('title')"
-        placeholder="Enter item title">
-      @if (isFieldInvalid('title')) {
-        <div class="error">
-          @if (itemForm.get('title')?.errors?.['required']) {
-            <span>Title is required</span>
-          }
-          @if (itemForm.get('title')?.errors?.['minlength']) {
-            <span>Title must be at least 3 characters</span>
-          }
-          @if (itemForm.get('title')?.errors?.['maxlength']) {
-            <span>Title cannot exceed 50 characters</span>
-          }
-        </div>
-      }
-    </div>
+    <div class="form-section">
+      <h3>Item Details</h3>
+      
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input 
+          id="title" 
+          type="text" 
+          formControlName="title"
+          [class.invalid]="isFieldInvalid('title')"
+          placeholder="Enter item title">
+        @if (isFieldInvalid('title')) {
+          <div class="error">
+            @if (itemForm.get('title')?.errors?.['required']) {
+              <span>Title is required</span>
+            }
+            @if (itemForm.get('title')?.errors?.['minlength']) {
+              <span>Title must be at least 3 characters</span>
+            }
+            @if (itemForm.get('title')?.errors?.['maxlength']) {
+              <span>Title cannot exceed 50 characters</span>
+            }
+          </div>
+        }
+      </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea 
-        id="description" 
-        formControlName="description"
-        [class.invalid]="isFieldInvalid('description')"
-        placeholder="Provide detailed description of the item"
-        rows="4">
-      </textarea>
-      @if (isFieldInvalid('description')) {
-        <div class="error">
-          @if (itemForm.get('description')?.errors?.['required']) {
-            <span>Description is required</span>
-          }
-          @if (itemForm.get('description')?.errors?.['minlength']) {
-            <span>Description must be at least 10 characters</span>
-          }
-          @if (itemForm.get('description')?.errors?.['maxlength']) {
-            <span>Description cannot exceed 500 characters</span>
-          }
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+          id="description" 
+          formControlName="description"
+          [class.invalid]="isFieldInvalid('description')"
+          placeholder="Provide detailed description of the item"
+          rows="4">
+        </textarea>
+        @if (isFieldInvalid('description')) {
+          <div class="error">
+            @if (itemForm.get('description')?.errors?.['required']) {
+              <span>Description is required</span>
+            }
+            @if (itemForm.get('description')?.errors?.['minlength']) {
+              <span>Description must be at least 10 characters</span>
+            }
+            @if (itemForm.get('description')?.errors?.['maxlength']) {
+              <span>Description cannot exceed 500 characters</span>
+            }
+          </div>
+        }
+        <div class="char-count">
+          {{ itemForm.get('description')?.value?.length || 0 }}/500
         </div>
-      }
-      <div class="char-count">
-        {{ itemForm.get('description')?.value?.length || 0 }}/500
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select 
+          id="category" 
+          formControlName="category"
+          [class.invalid]="isFieldInvalid('category')">
+          <option value="">Select a category</option>
+          <option *ngFor="let cat of categories" [value]="cat.value">
+            {{cat.label}}
+          </option>
+        </select>
+        @if (isFieldInvalid('category')) {
+          <div class="error">Please select a category</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input 
+          id="location" 
+          type="text" 
+          formControlName="location"
+          [class.invalid]="isFieldInvalid('location')"
+          placeholder="Enter location where item was lost/found">
+        @if (isFieldInvalid('location')) {
+          <div class="error">
+            @if (itemForm.get('location')?.errors?.['required']) {
+              <span>Location is required</span>
+            }
+            @if (itemForm.get('location')?.errors?.['minlength']) {
+              <span>Location must be at least 3 characters</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input 
+          id="date" 
+          type="date" 
+          formControlName="date"
+          [class.invalid]="isFieldInvalid('date')"
+          [max]="today">
+        @if (isFieldInvalid('date')) {
+          <div class="error">Please select a valid date</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select 
+          id="status" 
+          formControlName="status"
+          [class.invalid]="isFieldInvalid('status')">
+          <option value="">Select status</option>
+          <option value="lost">Lost</option>
+          <option value="found">Found</option>
+        </select>
+        @if (isFieldInvalid('status')) {
+          <div class="error">Please select a status</div>
+        }
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="category">Category</label>
-      <select 
-        id="category" 
-        formControlName="category"
-        [class.invalid]="isFieldInvalid('category')">
-        <option value="">Select a category</option>
-        <option *ngFor="let cat of categories" [value]="cat.value">
-          {{cat.label}}
-        </option>
-      </select>
-      @if (isFieldInvalid('category')) {
-        <div class="error">Please select a category</div>
-      }
-    </div>
+    <div formGroupName="contactInfo" class="contact-info-section">
+      <h3>Contact Information</h3>
+      
+      <div class="form-group">
+        <label for="name">Contact Name</label>
+        <input 
+          id="name" 
+          type="text" 
+          formControlName="name"
+          [class.invalid]="isFieldInvalid('contactInfo.name')"
+          placeholder="Enter your name">
+        @if (isFieldInvalid('contactInfo.name')) {
+          <div class="error">
+            @if (itemForm.get('contactInfo.name')?.errors?.['required']) {
+              <span>Name is required</span>
+            }
+          </div>
+        }
+      </div>
 
-    <div class="form-group">
-      <label for="location">Location</label>
-      <input 
-        id="location" 
-        type="text" 
-        formControlName="location"
-        [class.invalid]="isFieldInvalid('location')"
-        placeholder="Enter location where item was lost/found">
-      @if (isFieldInvalid('location')) {
-        <div class="error">
-          @if (itemForm.get('location')?.errors?.['required']) {
-            <span>Location is required</span>
-          }
-          @if (itemForm.get('location')?.errors?.['minlength']) {
-            <span>Location must be at least 3 characters</span>
-          }
-        </div>
-      }
-    </div>
+      <div class="form-group">
+        <label for="email">Contact Email</label>
+        <input 
+          id="email" 
+          type="email" 
+          formControlName="email"
+          [class.invalid]="isFieldInvalid('contactInfo.email')"
+          placeholder="Enter your email">
+        @if (isFieldInvalid('contactInfo.email')) {
+          <div class="error">
+            @if (itemForm.get('contactInfo.email')?.errors?.['required']) {
+              <span>Email is required</span>
+            }
+            @if (itemForm.get('contactInfo.email')?.errors?.['email']) {
+              <span>Please enter a valid email address</span>
+            }
+          </div>
+        }
+      </div>
 
-    <div class="form-group">
-      <label for="date">Date</label>
-      <input 
-        id="date" 
-        type="date" 
-        formControlName="date"
-        [class.invalid]="isFieldInvalid('date')"
-        [max]="today">
-      @if (isFieldInvalid('date')) {
-        <div class="error">Please select a valid date</div>
-      }
-    </div>
-
-    <div class="form-group">
-      <label for="status">Status</label>
-      <select 
-        id="status" 
-        formControlName="status"
-        [class.invalid]="isFieldInvalid('status')">
-        <option value="">Select status</option>
-        <option value="lost">Lost</option>
-        <option value="found">Found</option>
-      </select>
-      @if (isFieldInvalid('status')) {
-        <div class="error">Please select a status</div>
-      }
-    </div>
-
-    <div class="form-group">
-      <label for="email">Contact Email</label>
-      <input 
-        id="email" 
-        type="email" 
-        formControlName="email"
-        [class.invalid]="isFieldInvalid('email')"
-        placeholder="Enter your email">
-      @if (isFieldInvalid('email')) {
-        <div class="error">
-          @if (itemForm.get('email')?.errors?.['required']) {
-            <span>Email is required</span>
-          }
-          @if (itemForm.get('email')?.errors?.['email'] || itemForm.get('email')?.errors?.['pattern']) {
-            <span>Please enter a valid email address (e.g., example&#64;domain.com)</span>
-          }
-        </div>
-      }
-    </div>
-
-    <div class="form-group">
-      <label for="phone">Phone Number (optional)</label>
-      <input 
-        id="phone" 
-        type="tel" 
-        formControlName="phone"
-        [class.invalid]="isFieldInvalid('phone')"
-        placeholder="Enter your phone number">
-      @if (isFieldInvalid('phone')) {
-        <div class="error">
-          @if (itemForm.get('phone')?.errors?.['pattern']) {
-            <span>Please enter a valid phone number</span>
-          }
-          @if (itemForm.get('phone')?.errors?.['minlength']) {
-            <span>Phone number must be at least 8 digits</span>
-          }
-        </div>
-      }
+      <div class="form-group">
+        <label for="phone">Phone Number (optional)</label>
+        <input 
+          id="phone" 
+          type="tel" 
+          formControlName="phone"
+          [class.invalid]="isFieldInvalid('contactInfo.phone')"
+          placeholder="Enter your phone number">
+        @if (isFieldInvalid('contactInfo.phone')) {
+          <div class="error">
+            @if (itemForm.get('contactInfo.phone')?.errors?.['pattern']) {
+              <span>Please enter a valid phone number</span>
+            }
+          </div>
+        }
+      </div>
     </div>
 
     <div class="form-group">
