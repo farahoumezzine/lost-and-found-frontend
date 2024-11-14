@@ -1,84 +1,207 @@
+<div class="background-icons">
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+</div>
+
+@if (showSuccess) {
+  <div class="notification">
+    {{ isEditMode ? 'Item updated successfully!' : 'Item added successfully!' }}
+  </div>
+}
+
 <div class="form-container">
   <h2>{{ isEditMode ? 'Edit Item' : 'Add New Item' }}</h2>
   
   <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="item-form">
     <div class="form-group">
       <label for="title">Title</label>
-      <input id="title" type="text" formControlName="title">
-      @if (itemForm.get('title')?.invalid && itemForm.get('title')?.touched) {
-        <div class="error">Title is required</div>
+      <input 
+        id="title" 
+        type="text" 
+        formControlName="title"
+        [class.invalid]="isFieldInvalid('title')"
+        placeholder="Enter item title">
+      @if (isFieldInvalid('title')) {
+        <div class="error">
+          @if (itemForm.get('title')?.errors?.['required']) {
+            <span>Title is required</span>
+          }
+          @if (itemForm.get('title')?.errors?.['minlength']) {
+            <span>Title must be at least 3 characters</span>
+          }
+          @if (itemForm.get('title')?.errors?.['maxlength']) {
+            <span>Title cannot exceed 50 characters</span>
+          }
+        </div>
       }
     </div>
 
     <div class="form-group">
       <label for="description">Description</label>
-      <textarea id="description" formControlName="description"></textarea>
-      @if (itemForm.get('description')?.invalid && itemForm.get('description')?.touched) {
-        <div class="error">Description is required</div>
+      <textarea 
+        id="description" 
+        formControlName="description"
+        [class.invalid]="isFieldInvalid('description')"
+        placeholder="Provide detailed description of the item"
+        rows="4">
+      </textarea>
+      @if (isFieldInvalid('description')) {
+        <div class="error">
+          @if (itemForm.get('description')?.errors?.['required']) {
+            <span>Description is required</span>
+          }
+          @if (itemForm.get('description')?.errors?.['minlength']) {
+            <span>Description must be at least 10 characters</span>
+          }
+          @if (itemForm.get('description')?.errors?.['maxlength']) {
+            <span>Description cannot exceed 500 characters</span>
+          }
+        </div>
       }
+      <div class="char-count">
+        {{ itemForm.get('description')?.value?.length || 0 }}/500
+      </div>
     </div>
 
     <div class="form-group">
       <label for="category">Category</label>
-      <select id="category" formControlName="category">
+      <select 
+        id="category" 
+        formControlName="category"
+        [class.invalid]="isFieldInvalid('category')">
         <option value="">Select a category</option>
-        <option value="electronics">Electronics</option>
-        <option value="clothing">Clothing</option>
-        <option value="accessories">Accessories</option>
-        <option value="documents">Documents</option>
-        <option value="other">Other</option>
+        <option *ngFor="let cat of categories" [value]="cat.value">
+          {{cat.label}}
+        </option>
       </select>
-      @if (itemForm.get('category')?.invalid && itemForm.get('category')?.touched) {
-        <div class="error">Category is required</div>
+      @if (isFieldInvalid('category')) {
+        <div class="error">Please select a category</div>
       }
     </div>
 
     <div class="form-group">
       <label for="location">Location</label>
-      <input id="location" type="text" formControlName="location">
-      @if (itemForm.get('location')?.invalid && itemForm.get('location')?.touched) {
-        <div class="error">Location is required</div>
+      <input 
+        id="location" 
+        type="text" 
+        formControlName="location"
+        [class.invalid]="isFieldInvalid('location')"
+        placeholder="Enter location where item was lost/found">
+      @if (isFieldInvalid('location')) {
+        <div class="error">
+          @if (itemForm.get('location')?.errors?.['required']) {
+            <span>Location is required</span>
+          }
+          @if (itemForm.get('location')?.errors?.['minlength']) {
+            <span>Location must be at least 3 characters</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input 
+        id="date" 
+        type="date" 
+        formControlName="date"
+        [class.invalid]="isFieldInvalid('date')"
+        [max]="today">
+      @if (isFieldInvalid('date')) {
+        <div class="error">Please select a valid date</div>
       }
     </div>
 
     <div class="form-group">
       <label for="status">Status</label>
-      <select id="status" formControlName="status">
+      <select 
+        id="status" 
+        formControlName="status"
+        [class.invalid]="isFieldInvalid('status')">
         <option value="">Select status</option>
         <option value="lost">Lost</option>
         <option value="found">Found</option>
       </select>
-      @if (itemForm.get('status')?.invalid && itemForm.get('status')?.touched) {
-        <div class="error">Status is required</div>
+      @if (isFieldInvalid('status')) {
+        <div class="error">Please select a status</div>
       }
     </div>
 
     <div class="form-group">
-      <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email">
-      @if (itemForm.get('email')?.invalid && itemForm.get('email')?.touched) {
-        <div class="error">Valid email is required</div>
+      <label for="email">Contact Email</label>
+      <input 
+        id="email" 
+        type="email" 
+        formControlName="email"
+        [class.invalid]="isFieldInvalid('email')"
+        placeholder="Enter your email">
+      @if (isFieldInvalid('email')) {
+        <div class="error">
+          @if (itemForm.get('email')?.errors?.['required']) {
+            <span>Email is required</span>
+          }
+          @if (itemForm.get('email')?.errors?.['email'] || itemForm.get('email')?.errors?.['pattern']) {
+            <span>Please enter a valid email address (e.g., example&#64;domain.com)</span>
+          }
+        </div>
       }
     </div>
 
     <div class="form-group">
-      <label for="phone">Phone (optional)</label>
-      <input id="phone" type="tel" formControlName="phone">
+      <label for="phone">Phone Number (optional)</label>
+      <input 
+        id="phone" 
+        type="tel" 
+        formControlName="phone"
+        [class.invalid]="isFieldInvalid('phone')"
+        placeholder="Enter your phone number">
+      @if (isFieldInvalid('phone')) {
+        <div class="error">
+          @if (itemForm.get('phone')?.errors?.['pattern']) {
+            <span>Please enter a valid phone number</span>
+          }
+          @if (itemForm.get('phone')?.errors?.['minlength']) {
+            <span>Phone number must be at least 8 digits</span>
+          }
+        </div>
+      }
     </div>
 
     <div class="form-group">
       <label for="image">Image</label>
-      <input id="image" type="file" accept="image/*" (change)="onImageSelected($event)">
+      <div class="file-input-container">
+        <input 
+          #fileInput
+          id="image" 
+          type="file" 
+          accept="image/*" 
+          (change)="onImageSelected($event)"
+          [class.invalid]="isFieldInvalid('image')" 
+          style="display: none">
+        <div class="file-input-button" (click)="fileInput.click()">Choose File</div>
+      </div>
+      @if (isFieldInvalid('image')) {
+        <div class="error">Please select an image</div>
+      }
       @if (imagePreview) {
-        <img [src]="imagePreview" alt="Preview" class="image-preview">
+        <div class="image-preview-container">
+          <img [src]="imagePreview" alt="Preview" class="image-preview">
+          <button type="button" class="remove-image" (click)="removeImage()">×</button>
+        </div>
       }
     </div>
 
     <div class="form-actions">
-      <button type="submit">
-        {{ isEditMode ? 'Update Item' : 'Add Item' }}
+      <button type="submit" [disabled]="!itemForm.valid || isSubmitting">
+        {{ isEditMode ? 'Update' : 'Create' }} Item
       </button>
-      <button type="button" (click)="onCancel()">Cancel</button>
+      <button type="button" (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
     </div>
   </form>
 </div>

@@ -4,10 +4,11 @@ export interface Item {
     description: string;
     category: string;
     location: string;
-    date?: Date;
+    date: string;
     status: string;
     contactInfo: {
-      email?: string;
+      name: string;
+      email: string;
       phone?: string;
     };
     image?: string;

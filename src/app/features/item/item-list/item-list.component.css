@@ -16,6 +16,17 @@
     background: white;
   }
   
+  /* Add status-specific backgrounds */
+  .item-card[data-status="lost"] {
+    background-color: rgba(255, 0, 0, 0.1); /* Light red for lost items */
+    border-left: 4px solid #ff0000;
+  }
+  
+  .item-card[data-status="found"] {
+    background-color: rgba(0, 255, 0, 0.1); /* Light green for found items */
+    border-left: 4px solid #00ff00;
+  }
+  
   .item-card img {
     width: 100%;
     height: 200px;
@@ -40,4 +51,302 @@
   
   button:hover {
     background-color: #0056b3;
+  }
+  
+  .search-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  
+  .search-input {
+    flex: 1;
+    padding: 0.85rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+  }
+  
+  .status-filter {
+    min-width: 120px;
+    padding: 0.85rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .status-filter:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+  }
+  
+  .add-button {
+    margin-bottom: 20px;
+    background-color: #28a745;
+  }
+  
+  .add-button:hover {
+    background-color: #218838;
+  }
+  
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    font-size: 1.1em;
+    color: #6c757d;
+  }
+  
+  /* Host styling */
+  :host {
+    min-height: 100vh;
+    display: block;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e6f3ff 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Floating icons background */
+  .background-icons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .floating-icon {
+    position: absolute;
+    opacity: 0.1;
+    animation: floatIcon 20s infinite linear;
+  }
+  
+  .floating-icon::before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 24px;
+    color: #3b82f6;
+  }
+  
+  /* Different icons */
+  .floating-icon:nth-child(1)::before { content: '\f002'; }
+  .floating-icon:nth-child(2)::before { content: '\f1b2'; }
+  .floating-icon:nth-child(3)::before { content: '\f0e7'; }
+  .floating-icon:nth-child(4)::before { content: '\f06b'; }
+  .floating-icon:nth-child(5)::before { content: '\f0f3'; }
+  .floating-icon:nth-child(6)::before { content: '\f15c'; }
+  .floating-icon:nth-child(7)::before { content: '\f07c'; }
+  .floating-icon:nth-child(8)::before { content: '\f0c5'; }
+  
+  /* Position icons */
+  .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+  .floating-icon:nth-child(2) { top: 20%; left: 80%; animation-delay: -5s; }
+  .floating-icon:nth-child(3) { top: 80%; left: 15%; animation-delay: -10s; }
+  .floating-icon:nth-child(4) { top: 40%; left: 90%; animation-delay: -15s; }
+  .floating-icon:nth-child(5) { top: 70%; left: 70%; animation-delay: -7s; }
+  .floating-icon:nth-child(6) { top: 30%; left: 25%; animation-delay: -12s; }
+  .floating-icon:nth-child(7) { top: 90%; left: 40%; animation-delay: -3s; }
+  .floating-icon:nth-child(8) { top: 50%; left: 60%; animation-delay: -8s; }
+  
+  @keyframes floatIcon {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 0.1; }
+    25% { transform: translate(100px, 50px) rotate(90deg) scale(1.2); opacity: 0.2; }
+    50% { transform: translate(50px, 100px) rotate(180deg) scale(1); opacity: 0.1; }
+    75% { transform: translate(-50px, 50px) rotate(270deg) scale(0.8); opacity: 0.2; }
+    100% { transform: translate(0, 0) rotate(360deg) scale(1); opacity: 0.1; }
+  }
+  
+  /* Updated container styling */
+  .items-container {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Title styling */
+  h2 {
+    color: #1a365d;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+  }
+  
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #3b82f6;
+    border-radius: 3px;
+  }
+  
+  /* Search section styling */
+  .search-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  
+  .search-input, .status-filter {
+    padding: 0.85rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+  }
+  
+  .search-input:focus, .status-filter:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+  }
+  
+  /* Updated item card styling */
+  .item-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .item-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .item-card[data-status="lost"] {
+    border-left: 4px solid #ef4444;
+  }
+  
+  .item-card[data-status="found"] {
+    border-left: 4px solid #10B981;
+  }
+  
+  /* Card actions styling */
+  .card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .card-actions button {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .card-actions button:first-child {
+    background-color: #3b82f6;
+  }
+  
+  .card-actions button:nth-child(2) {
+    background-color: #ef4444;
+  }
+  
+  .card-actions button:last-child {
+    background-color: #10B981;
+  }
+  
+  .card-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+  .confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .confirmation-dialog {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+  }
+  
+  .confirmation-dialog h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .confirm-btn, .cancel-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .confirm-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .confirm-btn:hover {
+    background-color: #c82333;
+  }
+  
+  .cancel-btn {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #5a6268;
   }
