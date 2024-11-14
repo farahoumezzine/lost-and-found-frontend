@@ -24,6 +24,8 @@ export class ItemService {
   }
 
   updateItem(id: string, item: FormData): Observable<Item> {
+    console.log('Service - Updating item:', id);
+    console.log('Service - Form data entries:', Array.from((item as any).entries()));
     return this.http.put<Item>(`${this.apiUrl}/${id}`, item);
   }
 

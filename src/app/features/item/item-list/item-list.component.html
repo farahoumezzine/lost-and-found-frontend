@@ -1,24 +1,83 @@
-<div class="items-container">
-    <h2>Lost & Found Items</h2>
-    <button (click)="navigateToCreate()">Add New Item</button>
-  
-    <div class="items-grid">
-      @for (item of items; track item._id) {
-        <div class="item-card">
-          <img *ngIf="item.image" [src]="item.image" [alt]="item.title">
-          <h3>{{item.title}}</h3>
-          <p>{{item.description}}</p>
-          <p><strong>Category:</strong> {{item.category}}</p>
-          <p><strong>Location:</strong> {{item.location}}</p>
-          <p><strong>Status:</strong> {{item.status}}</p>
-          <div class="card-actions">
-              <button (click)="editItem(item._id!)">Edit</button>
-              <button (click)="deleteItem(item._id!)">Delete</button>
-          </div>
-        </div>
-       
-      } @empty {
-        <div>nope</div>
-    }
+<div class="background-icons">
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+  <div class="floating-icon"></div>
+</div>
+
+<!-- Add this before the items-container div -->
+@if (showDeleteConfirmation) {
+  <div class="confirmation-overlay">
+    <div class="confirmation-dialog">
+      <h3>Confirm Deletion</h3>
+      <p>Are you sure you want to delete this item?</p>
+      <div class="confirmation-actions">
+        <button class="confirm-btn" (click)="confirmDelete()">Yes, Delete</button>
+        <button class="cancel-btn" (click)="closeDeleteConfirmation()">No, Cancel</button>
+      </div>
     </div>
   </div>
+}
+
+<div class="items-container">
+    <h2>Lost & Found Items</h2>
+    <!-- Updated search section -->
+    <div class="search-section">
+        <input 
+            type="text" 
+            placeholder="Search items..."
+            class="search-input"
+            (input)="onSearch($event)"
+        >
+        <select 
+            class="status-filter"
+            (change)="onStatusChange($event)">
+            <option value="">All Status</option>
+            <option value="lost">Lost</option>
+            <option value="found">Found</option>
+        </select>
+    </div>
+    <div class="items-grid">
+        @for (item of filteredItems; track item._id) {
+            <div class="item-card" [attr.data-status]="item.status.toLowerCase()">
+                <img [src]="'http://localhost:3000' + item.image" [alt]="item.title">
+                <h3>{{item.title}}</h3>
+                <p>{{item.description}}</p>
+                <p><strong>Category:</strong> {{item.category}}</p>
+                <p><strong>Location:</strong> {{item.location}}</p>
+                <p><strong>Status:</strong> {{item.status}}</p>
+                @if (item.contactInfo) {
+                    <p><strong>Email:</strong> {{item.contactInfo.email}}</p>
+                    @if (item.contactInfo.phone) {
+                        <p><strong>Phone:</strong> {{item.contactInfo.phone}}</p>
+                    }
+                }
+
+                <div class="card-actions">
+                    <button (click)="editItem(item._id!)">Edit</button>
+                    <button (click)="deleteItem(item._id!)">Delete</button>
+                    <button >Message</button>
+                </div>
+            </div>
+        } @empty {
+            <div class="empty-state">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No Items Found</h3>
+                <p>
+                    @if (searchTerm || selectedStatus) {
+                        No items match your search criteria.
+                    } @else {
+                        There are currently no items in the lost and found.
+                    }
+                </p>
+                @if (!searchTerm && !selectedStatus) {
+                    <button class="add-item-btn" (click)="navigateToCreate()">Add First Item</button>
+                }
+            </div>
+        }
+    </div>
+</div>
