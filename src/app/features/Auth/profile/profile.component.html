@@ -1,0 +1,35 @@
+<h1 class="welcome-message" style="text-align: center; margin-top: 20px;">Hello {{user.username}}</h1>
+<div class="profile-container">
+  <h2 style="text-align: center;">My Profile</h2>
+  <form>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input 
+        id="username"
+        type="text"
+        [value]="user.username" #newUsername
+        name="username">
+    </div>
+
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <input 
+        id="email"
+        type="email"
+        [value]="user.email" #newEmail
+        name="email"  
+      >
+    </div>
+    <div class="button-group">
+      <button type="button" (click)="updateUser(newUsername.value, newEmail.value)">To modify</button>
+     
+      <button type="reset">Cancel</button>
+      <button type="button" class="delete-btn" (click)="delete()">Delete account</button>
+    </div>
+  </form>
+  <div class="logout-container">
+    <button type="button" class="logout-btn" (click)="onLogout()">
+      Log out
+    </button>
+  </div>
+</div>
