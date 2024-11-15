@@ -148,7 +148,7 @@ export class ItemFormComponent implements OnInit {
       formData.append('status', formValues.status);
       formData.append('date', formValues.date);
       
-      // Append contact info
+      // Append contact info with all required fields
       const contactInfo = {
         name: formValues.contactInfo.name,
         email: formValues.contactInfo.email,
@@ -158,6 +158,7 @@ export class ItemFormComponent implements OnInit {
       // Log the contact info for debugging
       console.log('Contact Info being sent:', contactInfo);
       
+      // Make sure to stringify the contactInfo object
       formData.append('contactInfo', JSON.stringify(contactInfo));
 
       // Append image if it exists
@@ -168,24 +169,39 @@ export class ItemFormComponent implements OnInit {
 
       this.isSubmitting = true;
 
-      const request = this.isEditMode ? 
-        this.itemService.updateItem(this.route.snapshot.paramMap.get('id')!, formData) :
-        this.itemService.createItem(formData);
-
-      request.subscribe({
-        next: (response) => {
-          console.log('Server response:', response); // Add this for debugging
-          this.showSuccess = true;
-          setTimeout(() => {
-            this.router.navigate(['/items']);
-          }, 2000);
-        },
-        error: (error) => {
-          console.error('Error saving item:', error);
-          this.isSubmitting = false;
-          alert('Error saving item. Please try again.');
+      if (this.isEditMode) {
+        const id = this.route.snapshot.paramMap.get('id');
+        if (id) {
+          this.itemService.updateItem(id, formData).subscribe({
+            next: (response) => {
+              console.log('Update response:', response);
+              this.showSuccess = true;
+              setTimeout(() => {
+                this.router.navigate(['/items']);
+              }, 2000);
+            },
+            error: (error) => {
+              console.error('Error updating item:', error);
+              this.isSubmitting = false;
+              alert('Error updating item. Please try again.');
+            }
+          });
         }
-      });
+      } else {
+        this.itemService.createItem(formData).subscribe({
+          next: (response) => {
+            this.showSuccess = true;
+            setTimeout(() => {
+              this.router.navigate(['/items']);
+            }, 2000);
+          },
+          error: (error) => {
+            console.error('Error creating item:', error);
+            this.isSubmitting = false;
+            alert('Error creating item. Please try again.');
+          }
+        });
+      }
     } else {
       this.markFormGroupTouched(this.itemForm);
     }
