@@ -3,18 +3,19 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
 }
 
 .login-box {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
-
+  max-width: 420px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .login-header {
@@ -24,8 +25,11 @@
 
 h2 {
   color: #2c3e50;
-  font-size: 28px;
-  margin-bottom: 10px;
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .subtitle {
@@ -34,8 +38,7 @@ h2 {
 }
 
 .form-group {
-  margin-bottom: 24px;
-  position: relative;
+  margin-bottom: 28px;
 }
 
 label {
@@ -53,18 +56,18 @@ label i {
 
 input, select {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 18px;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 15px;
+  border-radius: 12px;
+  font-size: 16px;
   transition: all 0.3s ease;
-  background-color: #f8f9fa;
+  background-color: rgba(248, 249, 250, 0.9);
 }
 
 input:focus, select:focus {
-  border-color: #3498db;
-  background-color: #fff;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  transform: translateY(-2px);
 }
 
 .form-group.error input,
@@ -124,12 +127,12 @@ input:focus, select:focus {
 
 button {
   width: 100%;
-  padding: 14px;
-  background: #3498db;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 12px;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -137,11 +140,14 @@ button {
   justify-content: center;
   align-items: center;
   gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 button:hover:not(:disabled) {
-  background: #2980b9;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 button:disabled {
@@ -151,14 +157,15 @@ button:disabled {
 
 .links {
   text-align: center;
-  margin-top: 24px;
+  margin-top: 30px;
   color: #7f8c8d;
+  font-size: 15px;
 }
 
 .links a {
-  color: #3498db;
+  color: #667eea;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   transition: color 0.3s ease;
 }
 
@@ -168,8 +175,14 @@ button:disabled {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateY(-30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
 }
 
 @keyframes slideIn {
@@ -196,3 +209,32 @@ button:disabled {
     padding: 12px;
   }
 }
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.success-message i {
+  margin-right: 8px;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+

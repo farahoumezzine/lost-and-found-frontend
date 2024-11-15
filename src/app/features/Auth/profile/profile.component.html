@@ -1,35 +1,55 @@
-<h1 class="welcome-message" style="text-align: center; margin-top: 20px;">Hello {{user.username}}</h1>
 <div class="profile-container">
-  <h2 style="text-align: center;">My Profile</h2>
+  @if (showSuccess) {
+    <div class="success-message">Profile updated successfully!</div>
+  }
+  <h1 class="welcome-message">Hello, {{user.username}}</h1>
+  
   <form>
     <div class="form-group">
       <label for="username">Username</label>
       <input 
         id="username"
         type="text"
-        [value]="user.username" #newUsername
-        name="username">
+        [value]="user.username" 
+        #newUsername
+        name="username"
+        placeholder="Enter username">
     </div>
 
     <div class="form-group">
-      <label for="email">E-mail</label>
+      <label for="email">Email Address</label>
       <input 
         id="email"
         type="email"
-        [value]="user.email" #newEmail
-        name="email"  
-      >
+        [value]="user.email" 
+        #newEmail
+        name="email"
+        placeholder="Enter email">
     </div>
+
     <div class="button-group">
-      <button type="button" (click)="updateUser(newUsername.value, newEmail.value)">To modify</button>
-     
+      <button type="button" (click)="updateUser(newUsername.value, newEmail.value)">Save Changes</button>
       <button type="reset">Cancel</button>
-      <button type="button" class="delete-btn" (click)="delete()">Delete account</button>
+      <button type="button" class="delete-btn" (click)="delete()">Delete Account</button>
     </div>
   </form>
+
   <div class="logout-container">
     <button type="button" class="logout-btn" (click)="onLogout()">
-      Log out
+      Log Out
     </button>
   </div>
 </div>
+
+@if (showDeleteConfirmation) {
+  <div class="confirmation-overlay">
+    <div class="confirmation-dialog">
+      <h3>Confirm Account Deletion</h3>
+      <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+      <div class="confirmation-actions">
+        <button class="confirm-btn" (click)="confirmDelete()">Yes, Delete</button>
+        <button class="cancel-btn" (click)="closeDeleteConfirmation()">No, Cancel</button>
+      </div>
+    </div>
+  </div>
+}

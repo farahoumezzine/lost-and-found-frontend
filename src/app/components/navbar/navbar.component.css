@@ -167,3 +167,27 @@
         padding: 1rem;
     }
 }
+
+.user-menu {
+    display: flex;
+    align-items: center;
+}
+
+.profile-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: #3498db;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.profile-btn:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.profile-btn i {
+    font-size: 16px;
+}

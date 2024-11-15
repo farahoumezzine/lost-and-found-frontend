@@ -66,33 +66,35 @@
                                 <i class="fas fa-map-marker-alt"></i>
                                 <span>{{item.location}}</span>
                             </div>
-                            @if (item.contactInfo?.name) {
-                                <div class="detail-item">
-                                    <i class="fas fa-user"></i>
-                                    <span>{{item.contactInfo.name}}</span>
-                                </div>
-                            }
                         </div>
                     </div>
 
                     <!-- Contact Information Section -->
-                    <div class="contact-info">
-                        <h4>Contact Information</h4>
-                        <div class="contact-details">
-                            @if (item.contactInfo?.email) {
-                                <div class="contact-item">
-                                    <i class="fas fa-envelope"></i>
-                                    <span>{{item.contactInfo.email}}</span>
-                                </div>
-                            }
-                            @if (item.contactInfo?.phone) {
-                                <div class="contact-item">
-                                    <i class="fas fa-phone"></i>
-                                    <span>{{item.contactInfo.phone}}</span>
-                                </div>
-                            }
+                    @if (item.contactInfo) {
+                        <div class="contact-info">
+                            <h4>Contact Information</h4>
+                            <div class="contact-details">
+                                @if (item.contactInfo.name) {
+                                    <div class="contact-item">
+                                        <i class="fas fa-user"></i>
+                                        <span>{{item.contactInfo.name}}</span>
+                                    </div>
+                                }
+                                @if (item.contactInfo.email) {
+                                    <div class="contact-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{item.contactInfo.email}}</span>
+                                    </div>
+                                }
+                                @if (item.contactInfo.phone) {
+                                    <div class="contact-item">
+                                        <i class="fas fa-phone"></i>
+                                        <span>{{item.contactInfo.phone}}</span>
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
 
                     <!-- Action Buttons -->
                     <div class="card-actions">
@@ -102,7 +104,8 @@
                         <button class="delete-btn" (click)="deleteItem(item._id!)">
                             <i class="fas fa-trash"></i> Delete
                         </button>
-                        <button class="message-btn">
+                        <!-- add testing User for chat -->
+                        <button class="message-btn" (click)="navigateToChat(item._id!, '65f2f645c0c0f3c8c9c6c123')">
                             <i class="fas fa-comment"></i> Message
                         </button>
                     </div>

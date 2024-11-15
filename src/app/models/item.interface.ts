@@ -5,6 +5,7 @@ export interface Item {
     category: string;
     location: string;
     date: string;
+
     status: string;
     contactInfo: {
       name: string;

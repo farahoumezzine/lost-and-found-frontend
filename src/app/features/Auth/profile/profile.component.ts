@@ -10,6 +10,8 @@ import { OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit{
   _id:any
+  showDeleteConfirmation = false;
+  showSuccess = false;
 
   user = {
     _id: '',
@@ -20,7 +22,7 @@ export class ProfileComponent implements OnInit{
   
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
     //this.user = JSON.parse(localStorage.getItem('User') || '{}');
   }
@@ -38,8 +40,7 @@ export class ProfileComponent implements OnInit{
  
   updateUser(newUsername: string, newEmail: string): void {
     if (newUsername == "" || newEmail == "") {
-     
-      alert("Please fill in all fields!");
+      this.showSuccess = false;
     } else {
       const newUser = {
         _id: this.user._id,
@@ -47,41 +48,50 @@ export class ProfileComponent implements OnInit{
         email: newEmail
       };
 
-
-  this.authService.updateUser(newUser).subscribe({
-    next: (res: any) => {
-      alert("Profile updated successfully!");
-      localStorage.setItem('username', JSON.stringify(newUsername));
-      localStorage.setItem('email', JSON.stringify(newEmail));
-      this.user.username = newUsername;
-      this.user.email = newEmail;
-    },
-    error: (err) => {
-      console.error('Error during update:', err);
-      alert("Error during update");
+      this.authService.updateUser(newUser).subscribe({
+        next: (res: any) => {
+          this.showSuccess = true;
+          setTimeout(() => {
+            this.showSuccess = false;
+          }, 2000);
+          
+          localStorage.setItem('username', JSON.stringify(newUsername));
+          localStorage.setItem('email', JSON.stringify(newEmail));
+          this.user.username = newUsername;
+          this.user.email = newEmail;
+        },
+        error: (err) => {
+          console.error('Error during update:', err);
+          this.showSuccess = false;
+        }
+      });
     }
-  });
-}
   }
 
   // ... reste du code ...
 
-delete(): void {
-  if (confirm('Are you sure you want to delete your account ?')) {
+  delete(): void {
+    this.showDeleteConfirmation = true;
+  }
+
+  confirmDelete(): void {
     const userId = JSON.parse(localStorage.getItem('_id') || '""');
     
     this.authService.deleteUser(userId).subscribe({
       next: () => {
-        alert('Account deleted successfully');
+        alert('Your account has been successfully deleted. You will be redirected to the registration page.');
         this.authService.logout();
         this.router.navigate(['/register']);
       },
       error: (err) => {
         console.error('Error during deletion:', err);
-        alert('Error during deletion');
+        alert('An error occurred while trying to delete your account. Please try again later.');
       }
     });
   }
-}
+
+  closeDeleteConfirmation() {
+    this.showDeleteConfirmation = false;
+  }
   
 }

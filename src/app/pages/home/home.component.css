@@ -1,0 +1,166 @@
+.home-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #1565c0 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .content {
+    text-align: center;
+    color: white;
+    z-index: 2;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: glow 3s infinite alternate;
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .get-started-btn {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #00c853, #64dd17);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
+  }
+  
+  .get-started-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
+  }
+  
+  .floating-icons {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .floating-icons i {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 2rem;
+    transition: transform 15s linear;
+  }
+  
+  .floating-icons i.animated {
+    transform: translate(calc(100vw - 100%), calc(100vh - 100%));
+  }
+  
+  .home-container::before,
+  .home-container::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: float 20s linear infinite;
+  }
+  
+  .home-container::before {
+    top: -150px;
+    left: -150px;
+  }
+  
+  .home-container::after {
+    bottom: -150px;
+    right: -150px;
+    animation-delay: -10s;
+  }
+  
+  .bubble {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border-radius: 50%;
+    animation: rise 15s infinite;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-delay: 0s; }
+  .bubble:nth-child(2) { width: 60px; height: 60px; left: 30%; animation-delay: 2s; }
+  .bubble:nth-child(3) { width: 100px; height: 100px; left: 50%; animation-delay: 4s; }
+  .bubble:nth-child(4) { width: 70px; height: 70px; left: 70%; animation-delay: 6s; }
+  .bubble:nth-child(5) { width: 90px; height: 90px; left: 90%; animation-delay: 8s; }
+  
+  @keyframes float {
+    0% {
+        transform: rotate(0deg) scale(1) translate(0, 0);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2) translate(50px, 50px);
+    }
+    100% {
+        transform: rotate(360deg) scale(1) translate(0, 0);
+    }
+  }
+  
+  @keyframes rise {
+    0% {
+        bottom: -100px;
+        transform: translateX(0) scale(1) rotate(0deg);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateX(100px) scale(1.2) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        bottom: 100vh;
+        transform: translateX(-100px) scale(0.8) rotate(360deg);
+        opacity: 0;
+    }
+  }
+  
+  .search-icon {
+    position: absolute;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.15);
+    animation: float-search 20s infinite linear;
+  }
+  
+  .search-icon:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+  .search-icon:nth-child(2) { top: 45%; left: 85%; animation-delay: -5s; }
+  .search-icon:nth-child(3) { top: 75%; left: 25%; animation-delay: -10s; }
+  
+  @keyframes float-search {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+        transform: translate(100px, 100px) rotate(180deg);
+    }
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+  }
+  
+  @keyframes glow {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #0073e6, 0 0 20px #0073e6;
+    }
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #0073e6, 0 0 40px #0073e6;
+    }
+  }

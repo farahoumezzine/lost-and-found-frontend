@@ -105,4 +105,11 @@ export class ItemListComponent implements OnInit {
       return matchesSearch && matchesStatus;
     });
   }
+
+  navigateToChat(itemId: string, ownerId: string) {
+    //Add test to chat 
+    const testReceiverId = '65f2f645c0c0f3c8c9c6c123'; // Replace with any valid user ID from your database
+    
+    this.router.navigate(['/chat', itemId, testReceiverId]);
+  }
 }

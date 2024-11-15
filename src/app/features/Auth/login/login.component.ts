@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   loading = false;
   errorMessage = '';
+  showSuccess: boolean = false;
   constructor(private authService: AuthService, private router: Router) {}
     
 
@@ -29,7 +30,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           console.log('Connexion réussie', response);
-          this.router.navigate(['/profile']); // Redirection après connexion
+          this.router.navigate(['/items']); // Redirection après connexion
         },
         error: (error) => {
           console.error('Erreur de connexion', error);

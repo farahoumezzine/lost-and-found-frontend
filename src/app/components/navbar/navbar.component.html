@@ -3,19 +3,28 @@
         <!-- Navigation Links -->
         <div class="nav-links">
             <ul>
-                <li><a href="/" class="active">Home</a></li>
-                <li><a href="/items">Lost Items</a></li>
-                <li><a href="/items/create">Add Items</a></li>
-                <li><a href="/items/edit/:id">Edit Items</a></li>
+                <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a></li>
+                @if (isLoggedIn) {
+                    <li><a routerLink="/items" routerLinkActive="active">All Items</a></li>
+                    <li><a routerLink="/items/create" routerLinkActive="active">Add Items</a></li>
+                }
             </ul>
         </div>
 
         <!-- User Actions -->
         <div class="nav-actions">
-            <div class="auth-buttons">
-                <a href="/login" class="login-btn">Sign in</a>
-                <a href="/register" class="register-btn">Sign up</a>
-            </div>
+            @if (!isLoggedIn) {
+                <div class="auth-buttons">
+                    <a routerLink="/login" class="login-btn">Sign in</a>
+                    <a routerLink="/register" class="register-btn">Sign up</a>
+                </div>
+            } @else {
+                <div class="user-menu">
+                    <a routerLink="/profile" class="profile-btn">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </nav>

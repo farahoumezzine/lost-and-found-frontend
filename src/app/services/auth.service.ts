@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { UserRegister, ApiResponse } from '../models/user.model';
 import { tap } from 'rxjs/operators';
 
@@ -9,6 +9,8 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   constructor(private http: HttpClient) { }
 // register user
@@ -32,6 +34,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
          localStorage.setItem('role', JSON.stringify(role));
          
         }
+        this.isLoggedInSubject.next(true);
       })
     );
 }
@@ -39,6 +42,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
 // logout user
 logout(): void {
   localStorage.clear();
+  this.isLoggedInSubject.next(false);
 }
 
 // ... existing code ...
