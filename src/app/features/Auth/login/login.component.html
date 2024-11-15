@@ -4,7 +4,7 @@
     
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
       <!-- Email -->
-      <div class="form-group" [class.error]="email.invalid && email.touched">
+      <div class="form-group" [class.error]="(email.invalid && email.touched) || (errorType === 'email' && showError)">
         <label for="email">E-mail</label>
         <input 
           type="email" 
@@ -15,14 +15,15 @@
           placeholder="Enter your email" 
           ngModel 
           #email="ngModel">
-        <div class="error-message" *ngIf="email.invalid && email.touched">
-          <span *ngIf="email.errors?.['required']">Email is required</span>
-          <span *ngIf="email.errors?.['email']">Invalid email format</span>
+        <div class="error-message">
+          <span *ngIf="email.invalid && email.touched && email.errors?.['required']">Email is required</span>
+          <span *ngIf="email.invalid && email.touched && email.errors?.['email']">Invalid email format</span>
+          <span *ngIf="errorType === 'email' && showError">{{ errorMessage }}</span>
         </div>
       </div>
 
-      <!-- Mot de passe -->
-      <div class="form-group" [class.error]="password.invalid && password.touched">
+      <!-- Password -->
+      <div class="form-group" [class.error]="(password.invalid && password.touched) || (errorType === 'password' && showError)">
         <label for="password">Password</label>
         <input 
           type="password" 
@@ -33,24 +34,26 @@
           placeholder="Enter your password" 
           ngModel 
           #password="ngModel">
-        <div class="error-message" *ngIf="password.invalid && password.touched">
-          <span *ngIf="password.errors?.['required']">Password is required</span>
-          <span *ngIf="password.errors?.['minlength']">Password must contain at least 6 characters</span>
+        <div class="error-message">
+          <span *ngIf="password.invalid && password.touched && password.errors?.['required']">Password is required</span>
+          <span *ngIf="password.invalid && password.touched && password.errors?.['minlength']">Password must contain at least 6 characters</span>
+          <span *ngIf="errorType === 'password' && showError">{{ errorMessage }}</span>
         </div>
       </div>
 
-      <!-- Message d'erreur global -->
-      <div class="alert alert-danger" *ngIf="errorMessage">
+      <!-- General error message -->
+      <div class="global-error" *ngIf="errorType === 'general' && showError">
+        <i class="fas fa-exclamation-circle"></i>
         {{ errorMessage }}
       </div>
 
-      <!-- Bouton de connexion -->
+      <!-- Login button -->
       <button type="submit" [disabled]="f.invalid || loading">
         <span *ngIf="!loading">Sign In</span>
-        <span *ngIf="loading">Connection in progress...</span>
+        <div class="loading-spinner" *ngIf="loading"></div>
       </button>
 
-      <!-- Liens utiles -->
+      <!-- Links -->
       <div class="links">
         <a routerLink="/forgot-password">Forgotten password ?</a>
         <p>No account yet ? <a routerLink="/register">Create an account</a></p>

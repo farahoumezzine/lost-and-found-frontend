@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -9,17 +10,19 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   loading = false;
   errorMessage = '';
-  constructor(private authService: AuthService, private router: Router) {}
-    
+  showError = false;
+  errorType: 'email' | 'password' | 'general' | null = null;
 
-  ngOnInit(): void {
-    
-  }
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {}
 
   onSubmit(form: any): void {
     if (form.valid) {
       this.loading = true;
       this.errorMessage = '';
+      this.errorType = null;
+      this.showError = false;
 
       const credentials = {
         email: form.value.email,
@@ -29,11 +32,22 @@ export class LoginComponent implements OnInit {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           console.log('Connexion réussie', response);
-          this.router.navigate(['/profile']); // Redirection après connexion
+          this.router.navigate(['/items']);
         },
         error: (error) => {
           console.error('Erreur de connexion', error);
-          this.errorMessage = error.error.message || 'Erreur de connexion';
+          this.showError = true;
+          
+          if (error.error.message.includes('utilisateur')) {
+            this.errorType = 'email';
+            this.errorMessage = 'Utilisateur non trouvé';
+          } else if (error.error.message.includes('mot de passe')) {
+            this.errorType = 'password';
+            this.errorMessage = 'Mot de passe incorrect';
+          } else {
+            this.errorType = 'general';
+            this.errorMessage = 'Erreur de connexion';
+          }
           this.loading = false;
         },
         complete: () => {
