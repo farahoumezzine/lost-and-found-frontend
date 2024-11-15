@@ -106,10 +106,19 @@ export class ItemListComponent implements OnInit {
     });
   }
 
-  navigateToChat(itemId: string, ownerId: string) {
-    //Add test to chat 
-    const testReceiverId = '65f2f645c0c0f3c8c9c6c123'; // Replace with any valid user ID from your database
+  navigateToChat(itemId: string, testUserId: string) {
+    const currentUserId = localStorage.getItem('_id')?.replace(/['"]+/g, '');
     
-    this.router.navigate(['/chat', itemId, testReceiverId]);
+    if (!currentUserId) {
+      alert('Please login to start a chat');
+      return;
+    }
+
+    if (currentUserId === testUserId) {
+      alert("You can't start a chat with yourself");
+      return;
+    }
+
+    this.router.navigate(['/chat', itemId, testUserId]);
   }
 }

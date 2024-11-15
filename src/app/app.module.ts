@@ -13,9 +13,6 @@ import { FormsModule } from '@angular/forms';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
-import { HomeComponent } from './pages/home/home.component';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -23,7 +20,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,16 +29,14 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
     NavbarComponent,
     FormsModule,
-    ReactiveFormsModule,
-    MatSnackBarModule
+    ReactiveFormsModule
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    },
-    provideAnimationsAsync()
+    }
   ],
   bootstrap: [AppComponent]
 })

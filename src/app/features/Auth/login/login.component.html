@@ -4,17 +4,18 @@
     
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
       <!-- Email -->
-      <div class="form-group" [class.error]="email.invalid && email.touched" [class.success]="email.valid && email.touched">
-        <label for="email">Email</label>
-        <div class="input-wrapper">
-          <input type="email" id="email" name="email" required email ngModel #email="ngModel">
-          <i class="validation-icon fas" 
-             [class.fa-times-circle]="email.invalid && email.touched"
-             [class.fa-check-circle]="email.valid && email.touched">
-          </i>
-        </div>
+      <div class="form-group" [class.error]="email.invalid && email.touched">
+        <label for="email">E-mail</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          required
+          email
+          placeholder="Enter your email" 
+          ngModel 
+          #email="ngModel">
         <div class="error-message" *ngIf="email.invalid && email.touched">
-          <i class="fas fa-exclamation-circle"></i>
           <span *ngIf="email.errors?.['required']">Email is required</span>
           <span *ngIf="email.errors?.['email']">Invalid email format</span>
         </div>
@@ -38,22 +39,15 @@
         </div>
       </div>
 
-      <!-- Message de succès -->
-      <div class="success-message" *ngIf="showSuccess">
-        <i class="fas fa-check-circle"></i>
-        <span>Connection successful! Redirecting...</span>
-      </div>
-
       <!-- Message d'erreur global -->
-      <div class="global-error" *ngIf="errorMessage">
-        <i class="fas fa-exclamation-circle"></i>
-        <span>{{ errorMessage }}</span>
+      <div class="alert alert-danger" *ngIf="errorMessage">
+        {{ errorMessage }}
       </div>
 
       <!-- Bouton de connexion -->
       <button type="submit" [disabled]="f.invalid || loading">
         <span *ngIf="!loading">Sign In</span>
-        <div class="loading-spinner" *ngIf="loading"></div>
+        <span *ngIf="loading">Connection in progress...</span>
       </button>
 
       <!-- Liens utiles -->
